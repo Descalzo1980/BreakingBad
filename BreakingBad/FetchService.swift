@@ -17,6 +17,11 @@ struct FetchService {
     func fetchQuote(from show: String) async throws -> Quote {
         let quoteURL = baseUrl.appending(path: "qoutes/random")
         let fetchURL = quoteURL.appending(queryItems: [URLQueryItem(name: "production", value: show)])
-        return Quote(quote: "", character: "")
+        let(data, response) = try await URLSession.shared.data(from: fetchURL)
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw FetchError.badResponce
+        }
+        let quote = try JSONDecoder().decode(Quote.self, from: data)
+        return quote
     }
 }
