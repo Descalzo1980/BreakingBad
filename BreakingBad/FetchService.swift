@@ -7,12 +7,35 @@
 
 import Foundation
 
+extension GlobalEnvironment {
+    private static func obtainProperty(for key: Keys) -> String {
+        guard let property = Bundle.main.object(
+            forInfoDictionaryKey: key.rawValue
+        ) as? String else {
+            fatalError("\(key.rawValue) property undefined")
+        }
+        return property
+    }
+}
+
+extension GlobalEnvironment {
+    static let baseUrl: String = {
+        obtainProperty(for: .urlHost)
+    }()
+}
+
+public struct GlobalEnvironment {
+    enum Keys: String {
+        case urlHost = "BASE_URL"
+    }
+}
+
 struct FetchService {
     private enum FetchError: Error {
         case badResponse
     }
     
-    private let baseUrl = URL(string: "https://breaking-bad-api-six.vercel.app/api")!
+    private let baseUrl = URL(string: GlobalEnvironment.baseUrl)!
     
     func fetchQuote(from show: String) async throws -> Quote {
         let quoteURL = baseUrl.appending(path: "quotes/random")
