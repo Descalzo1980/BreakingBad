@@ -8,11 +8,11 @@
 import Foundation
 
 struct FetchService {
-    enum FetchError: Error {
+    private enum FetchError: Error {
         case badResponse
     }
     
-    let baseUrl = URL(string: "https://breaking-bad-api-six.vercel.app/api")!
+    private let baseUrl = URL(string: "https://breaking-bad-api-six.vercel.app/api")!
     
     func fetchQuote(from show: String) async throws -> Quote {
         let quoteURL = baseUrl.appending(path: "quotes/random")
