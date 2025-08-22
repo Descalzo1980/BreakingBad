@@ -25,9 +25,20 @@ class ViewModel {
     
     var character: Char
     
-    init(status: FetchStatus, quote: Quote, character: Char) {
-        self.status = status
-        self.quote = quote
-        self.character = character
+//    init(status: FetchStatus, quote: Quote, character: Char) {
+//        self.status = status
+//        self.quote = quote
+//        self.character = character
+//    }
+    
+    init() {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        let quoteData = try! Data(contentsOf: Bundle.main.url(forResource: "samplequote", withExtension: "json")!)
+        quote = try! decoder.decode(Quote.self, from: quoteData)
+        
+        let characterData = try! Data(contentsOf: Bundle.main.url(forResource: "samplecharacter", withExtension: "json")!)
+        character = try! decoder.decode(Char.self, from: characterData)
     }
 }
